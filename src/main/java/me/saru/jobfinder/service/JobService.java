@@ -38,16 +38,32 @@ public class JobService {
             Map<String, Object> jobs = (Map<String, Object>) aJsonArray;
 
             Company company = new Company((Integer) jobs.get("company_id"), (String) jobs.get("company_name"));
-            companyRepository.save(company);
+            Company returnedCompany = companyRepository.findByCompanyId(company.getCompanyId());
+            if (returnedCompany == null) {
+                returnedCompany = companyRepository.save(company);
+            }
 
             jobRepository.save(new Job((String) jobs.get("logo_thumb_img"),
-                    (String) jobs.get("company_name"),
                     (Integer) jobs.get("id"),
                     (String) jobs.get("position"),
-                    company));
+                    returnedCompany));
         }
 
         // TODO getSize
         return jobRepository.findAll().size();
+    }
+
+    // TODO company?
+    public Company saveCompany(Company company) {
+        Company returnedCompany = companyRepository.findByCompanyId(company.getCompanyId());
+        if (returnedCompany != null) {
+            throw new IllegalArgumentException();
+        }
+
+        return companyRepository.save(company);
+    }
+
+    public Job saveJobs(Job job) {
+        return jobRepository.save(job);
     }
 }

@@ -14,6 +14,9 @@ public class Company {
     private int companyId;
     private String name;
 
+    public Company() {
+    }
+
     public Company(int companyId, String name) {
         this.companyId = companyId;
         this.name = name;
@@ -25,6 +28,7 @@ public class Company {
 
     public int getCompanyId() {
         return companyId;
-
     }
+
+
 }

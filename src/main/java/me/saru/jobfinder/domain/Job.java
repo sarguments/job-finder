@@ -9,7 +9,6 @@ public class Job {
     private Long id;
 
     private String img;
-    private String name;
     private int jobId;
     private String position;
 
@@ -17,9 +16,11 @@ public class Job {
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_job_to_company"))
     private Company company;
 
-    public Job(String img, String name, int jobId, String position, Company company) {
+    public Job() {
+    }
+
+    public Job(String img, int jobId, String position, Company company) {
         this.img = img;
-        this.name = name;
         this.jobId = jobId;
         this.position = position;
         this.company = company;
@@ -27,10 +28,6 @@ public class Job {
 
     public String getImg() {
         return img;
-    }
-
-    public String getName() {
-        return name;
     }
 
     public int getJobId() {
