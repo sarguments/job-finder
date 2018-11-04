@@ -15,7 +15,7 @@ public class OkHttpClientTest {
 
     private static final OkHttpClient client = HttpClient.globalClient();
 
-    public static void getCurrencyRate() {
+    public static void okHttp() {
         HttpUrl url = HttpUrl.parse("https://www.wanted.co.kr/wdlist/518/872?referer_id=352681");
         Request request = new Request.Builder().url(url).get().build();
         String html = Retry.retryUntilSuccessfulWithBackoff(
@@ -27,6 +27,6 @@ public class OkHttpClientTest {
     }
 
     public static void main(String[] args) {
-        getCurrencyRate();
+        okHttp();
     }
 }

@@ -18,8 +18,8 @@ import java.util.Map;
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 public class JobFinderApplicationTests {
-    public static final int PAGE = 3;
-    public static final String WANTED = "www.wanted.co.kr";
+    private static final int PAGE = 3;
+    private static final String WANTED = "www.wanted.co.kr";
     private static final Logger log = LoggerFactory.getLogger(JobFinderApplicationTests.class);
     private RestTemplate restTemplate = new RestTemplate();
 
