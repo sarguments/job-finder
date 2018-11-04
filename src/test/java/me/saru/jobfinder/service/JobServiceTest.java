@@ -10,7 +10,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 //@RunWith(MockitoJUnitRunner.class)
-public class JobInfoServiceTest {
+public class JobServiceTest {
     //    @Mock
     @Autowired
     private JobService jobService;
@@ -19,13 +19,5 @@ public class JobInfoServiceTest {
     public void duplicate() {
         Company company = new Company(3, "company3");
         jobService.saveCompany(company);
-//        jobService.saveJobs(new Job("img", "name", 1, "position", company));
     }
-
-    //    @Test
-//    public void getTotalSize() {
-//        when(jobService.getTotalSize()).thenReturn(20);
-//        int totalSize = jobService.getTotalSize();
-//        assertThat(totalSize).isEqualTo(20);
-//    }
 }

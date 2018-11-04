@@ -4,13 +4,31 @@ package me.saru.jobfinder.domain;
 public class JobInfo {
     private int total;
     private String next;
+    private static JobInfo jobInfoInstance;
 
-    public JobInfo() {
+    private JobInfo() {
     }
 
-    public JobInfo(int total, String next) {
-        this.total = total;
+    public static JobInfo getInstance() {
+        if (jobInfoInstance == null) {
+            jobInfoInstance = new JobInfo();
+        }
+
+        return jobInfoInstance;
+    }
+
+    public static void updateInfo(int total, String next) {
+        JobInfo jobInfo = getInstance();
+        jobInfo.updateTotal(total);
+        jobInfo.updateNext(next);
+    }
+
+    private void updateNext(String next) {
         this.next = next;
+    }
+
+    private void updateTotal(int total) {
+        this.total = total;
     }
 
     public int getTotal() {

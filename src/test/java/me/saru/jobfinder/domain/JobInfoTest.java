@@ -7,7 +7,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class JobInfoTest {
     @Test
     public void init() {
-        JobInfo jobInfo = new JobInfo(20, "next");
+        JobInfo jobInfo = JobInfo.getInstance();
+        jobInfo.updateInfo(20, "next");
         assertThat(jobInfo.getTotal()).isEqualTo(20);
     }
 }

@@ -3,6 +3,7 @@ package me.saru.jobfinder.service;
 import com.jayway.jsonpath.JsonPath;
 import me.saru.jobfinder.domain.Company;
 import me.saru.jobfinder.domain.Job;
+import me.saru.jobfinder.domain.JobInfo;
 import me.saru.jobfinder.repository.CompanyRepository;
 import me.saru.jobfinder.repository.JobRepository;
 import net.minidev.json.JSONArray;
@@ -32,6 +33,10 @@ public class JobService {
     public int saveJobs(String json) {
         int totalSize = JsonPath.read(json, "$.data.jobs.total");
         System.out.println("total : " + totalSize);
+
+        String next = JsonPath.read(json, "$.links.next");
+        JobInfo jobInfo = JobInfo.getInstance();
+        jobInfo.updateInfo(totalSize, next);
 
         JSONArray jsonArray = JsonPath.read(json, "$.data.jobs.data[*]");
         for (Object aJsonArray : jsonArray) {

@@ -35,8 +35,10 @@ public class JobInfoController {
 
         String uri = uriComponents.toUriString();
         String json = restTemplate.getForObject(uri, String.class);
-        int size = jobService.saveJobs(json);
 
-        return new JobInfo(size, "next");
+        // TODO size test
+        jobService.saveJobs(json);
+
+        return JobInfo.getInstance();
     }
 }
