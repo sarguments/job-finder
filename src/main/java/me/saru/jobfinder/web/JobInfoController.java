@@ -1,9 +1,11 @@
 package me.saru.jobfinder.web;
 
-import me.saru.jobfinder.domain.JobInfo;
+import me.saru.jobfinder.domain.TotalJobInfo;
+import me.saru.jobfinder.dto.JobInfoDto;
 import me.saru.jobfinder.service.JobService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
@@ -22,7 +24,7 @@ public class JobInfoController {
     }
 
     @GetMapping("/info")
-    public JobInfo jobCount() {
+    public TotalJobInfo jobSave() {
         UriComponents uriComponents = UriComponentsBuilder.newInstance().scheme("https").host("www.wanted.co.kr")
                 .path("/api/v3/search")
                 .queryParam("locale", "ko-kr")
@@ -41,20 +43,20 @@ public class JobInfoController {
         // TODO 끝일 경우 -1
         jobService.saveJobAndCompany(json);
 
-        return JobInfo.getInstance();
+        return TotalJobInfo.getInstance();
     }
 
     // TOOD 먼저 호출할 경우 예외처리
     // TODO get?
     @GetMapping("/update")
-    public JobInfo jobUpdate() {
+    public TotalJobInfo jobUpdate() {
         updateProcess();
 
-        return JobInfo.getInstance();
+        return TotalJobInfo.getInstance();
     }
 
     private void updateProcess() {
-        String next = JobInfo.getInstance().getNext();
+        String next = TotalJobInfo.getInstance().getNext();
         UriComponents uriComponents = UriComponentsBuilder.newInstance().scheme("https").host("www.wanted.co.kr")
                 .path(next)
                 .build();
@@ -68,11 +70,18 @@ public class JobInfoController {
     }
 
     @GetMapping(value = "/update", params = "number")
-    public JobInfo jobUpdateNumber(@RequestParam int number) {
+    public TotalJobInfo jobUpdateNumber(@RequestParam int number) {
         for (int i = 0; i < number; i++) {
             updateProcess();
         }
 
-        return JobInfo.getInstance();
+        return TotalJobInfo.getInstance();
+    }
+
+    @GetMapping("/jobs/{jobId}")
+    public JobInfoDto jobInfo(@PathVariable int jobId) {
+        String uri = "https://www.wanted.co.kr/api/v1/jobs/" + jobId;
+        String json = restTemplate.getForObject(uri, String.class);
+        return jobService.extractJobInfo(json);
     }
 }

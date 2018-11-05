@@ -16,6 +16,9 @@ public class Company implements UrlGeneratable {
     private int companyId;
     private String name;
 
+    //founded_year
+    //total_location
+
     @OneToMany(mappedBy = "company")
     @JsonIgnore
     private List<Job> jobs = new ArrayList<>();

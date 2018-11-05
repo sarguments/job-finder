@@ -3,10 +3,13 @@ package me.saru.jobfinder.service;
 import com.jayway.jsonpath.JsonPath;
 import me.saru.jobfinder.domain.Company;
 import me.saru.jobfinder.domain.Job;
-import me.saru.jobfinder.domain.JobInfo;
+import me.saru.jobfinder.domain.TotalJobInfo;
+import me.saru.jobfinder.dto.JobInfoDto;
 import me.saru.jobfinder.repository.CompanyRepository;
 import me.saru.jobfinder.repository.JobRepository;
 import net.minidev.json.JSONArray;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +18,8 @@ import java.util.Map;
 
 @Service
 public class JobService {
+    private static final Logger log = LoggerFactory.getLogger(JobService.class);
+
     private JobRepository jobRepository;
     private CompanyRepository companyRepository;
 
@@ -37,8 +42,8 @@ public class JobService {
         }
 
         // TODO 잡의 경우도 중복 체크 해야함
-        JobInfo jobInfo = JobInfo.getInstance();
-        jobInfo.updateInfo(totalSize, next);
+        TotalJobInfo totalJobInfo = TotalJobInfo.getInstance();
+        totalJobInfo.updateInfo(totalSize, next);
 
         JSONArray jsonArray = JsonPath.read(json, "$.data.jobs.data[*]");
         saveJobAndCompanyProcess(jsonArray);
@@ -49,6 +54,9 @@ public class JobService {
     private void saveJobAndCompanyProcess(JSONArray jsonArray) {
         for (Object aJsonArray : jsonArray) {
             Map<String, Object> jobs = (Map<String, Object>) aJsonArray;
+            log.info("company_name : {}", jobs.get("company_name"));
+            log.info("position : {}", jobs.get("position"));
+            log.info("---------------------------------------");
 
             Company company = new Company((Integer) jobs.get("company_id"), (String) jobs.get("company_name"));
             Company returnedCompany = findCompany(company);
@@ -86,5 +94,9 @@ public class JobService {
 
     public Job findByJobId(int jobId) {
         return jobRepository.findByJobId(jobId);
+    }
+
+    public JobInfoDto extractJobInfo(String json) {
+        return JobInfoDto.of(json);
     }
 }
