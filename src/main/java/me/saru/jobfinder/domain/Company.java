@@ -40,7 +40,7 @@ public class Company implements UrlGeneratable {
         return companyId;
     }
 
-
+    // TODO set을 쓰는건 다시 고려
     public void addJob(Job job) {
         this.jobs.add(job);
         if (job.getCompany() != this) {
@@ -57,6 +57,7 @@ public class Company implements UrlGeneratable {
         return false;
     }
 
+    // TODO get?
     public List<Job> getJobs() {
         return jobs;
     }

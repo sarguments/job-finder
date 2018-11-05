@@ -11,6 +11,7 @@ public class Job implements UrlGeneratable {
     private Long id;
 
     private String img;
+    // TODO id를 다른 이름으로 바꿔야 할지?
     private int jobId;
     private String position;
 
@@ -25,6 +26,10 @@ public class Job implements UrlGeneratable {
         this.img = img;
         this.jobId = jobId;
         this.position = position;
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public String getImg() {
