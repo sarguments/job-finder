@@ -1,3 +1,6 @@
 INSERT INTO COMPANY VALUES(1, 1, 'name1');
 INSERT INTO COMPANY VALUES(2, 2, 'name2');
 INSERT INTO COMPANY VALUES(3, 3, 'name3');
+
+INSERT INTO JOB VALUES(1, 'img1', 1, 'position1', 2);
+INSERT INTO JOB VALUES(2, 'img2', 2, 'position2', 2);

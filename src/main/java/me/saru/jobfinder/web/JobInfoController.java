@@ -39,7 +39,7 @@ public class JobInfoController {
 
         // TODO size test
         // TODO 끝일 경우 -1
-        jobService.saveJobs(json);
+        jobService.saveJobAndCompany(json);
 
         return JobInfo.getInstance();
     }
@@ -64,7 +64,7 @@ public class JobInfoController {
 
         // TODO size test
         // TODO 끝일 경우 -1
-        jobService.saveJobs(json);
+        jobService.saveJobAndCompany(json);
     }
 
     @GetMapping(value = "/update", params = "number")

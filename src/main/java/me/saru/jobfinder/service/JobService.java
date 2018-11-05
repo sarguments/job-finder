@@ -10,6 +10,7 @@ import net.minidev.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -26,11 +27,7 @@ public class JobService {
         this.companyRepository = companyRepository;
     }
 
-    public int getTotalSize() {
-        return jobRepository.findAll().size();
-    }
-
-    public int saveJobs(String json) {
+    public int saveJobAndCompany(String json) {
         int totalSize = JsonPath.read(json, "$.data.jobs.total");
         System.out.println("total : " + totalSize);
 
@@ -59,10 +56,12 @@ public class JobService {
                 returnedCompany = companyRepository.save(company);
             }
 
-            jobRepository.save(new Job((String) jobs.get("logo_thumb_img"),
+            Job job = new Job((String) jobs.get("logo_thumb_img"),
                     (Integer) jobs.get("id"),
-                    (String) jobs.get("position"),
-                    returnedCompany));
+                    (String) jobs.get("position"));
+            job.setCompany(returnedCompany);
+
+            jobRepository.save(job);
         }
     }
 
@@ -80,7 +79,12 @@ public class JobService {
         return companyRepository.findByCompanyId(company.getCompanyId());
     }
 
-    public Job saveJobs(Job job) {
-        return jobRepository.save(job);
+    public List<Job> findAllJobByCompanyId(int companyId) {
+        Company company = companyRepository.findByCompanyId(companyId);
+        return jobRepository.findAllByCompanyId(company.getId());
+    }
+
+    public Job findByJobId(int jobId) {
+        return jobRepository.findByJobId(jobId);
     }
 }

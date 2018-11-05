@@ -21,11 +21,10 @@ public class Job implements UrlGeneratable {
     public Job() {
     }
 
-    public Job(String img, int jobId, String position, Company company) {
+    public Job(String img, int jobId, String position) {
         this.img = img;
         this.jobId = jobId;
         this.position = position;
-        this.company = company;
     }
 
     public String getImg() {
@@ -47,5 +46,13 @@ public class Job implements UrlGeneratable {
     @Override
     public String generateUrl() {
         return "https://www.wanted.co.kr/api/v1/jobs/" + jobId;
+    }
+
+    public void setCompany(Company company) {
+        this.company = company;
+
+        if (!company.getJobs().contains(this)) {
+            company.getJobs().add(this);
+        }
     }
 }
