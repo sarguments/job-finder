@@ -11,4 +11,11 @@ public class JobTest {
                 new Company(1, "companyName"));
         assertThat(job.getImg()).isEqualTo("img");
     }
+
+    @Test
+    public void urlGenerateTest() {
+        Job job = new Job("img", 1, "position",
+                new Company(1, "companyName"));
+        assertThat(job.generateUrl()).isEqualTo("https://www.wanted.co.kr/api/v1/jobs/1");
+    }
 }

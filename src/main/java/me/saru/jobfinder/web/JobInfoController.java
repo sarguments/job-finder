@@ -4,6 +4,7 @@ import me.saru.jobfinder.domain.JobInfo;
 import me.saru.jobfinder.service.JobService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponents;
@@ -38,6 +39,37 @@ public class JobInfoController {
 
         // TODO size test
         jobService.saveJobs(json);
+
+        return JobInfo.getInstance();
+    }
+
+    // TOOD 먼저 호출할 경우 예외처리
+    // TODO get?
+    @GetMapping("/update")
+    public JobInfo jobUpdate() {
+        updateProcess();
+
+        return JobInfo.getInstance();
+    }
+
+    private void updateProcess() {
+        String next = JobInfo.getInstance().getNext();
+        UriComponents uriComponents = UriComponentsBuilder.newInstance().scheme("https").host("www.wanted.co.kr")
+                .path(next)
+                .build();
+
+        String uri = uriComponents.toUriString();
+        String json = restTemplate.getForObject(uri, String.class);
+
+        // TODO size test
+        jobService.saveJobs(json);
+    }
+
+    @GetMapping(value = "/update", params = "number")
+    public JobInfo jobUpdateNumber(@RequestParam int number) {
+        for (int i = 0; i < number; i++) {
+            updateProcess();
+        }
 
         return JobInfo.getInstance();
     }

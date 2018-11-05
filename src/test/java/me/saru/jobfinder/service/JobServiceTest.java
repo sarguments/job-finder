@@ -16,7 +16,7 @@ public class JobServiceTest {
     private JobService jobService;
 
     @Test(expected = IllegalArgumentException.class)
-    public void duplicate() {
+    public void duplicateCompany() {
         Company company = new Company(3, "company3");
         jobService.saveCompany(company);
     }

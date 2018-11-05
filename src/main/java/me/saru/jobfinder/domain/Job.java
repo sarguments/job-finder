@@ -1,9 +1,11 @@
 package me.saru.jobfinder.domain;
 
+import me.saru.jobfinder.support.UrlGeneratable;
+
 import javax.persistence.*;
 
 @Entity
-public class Job {
+public class Job implements UrlGeneratable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private Long id;
@@ -40,5 +42,10 @@ public class Job {
 
     public Company getCompany() {
         return company;
+    }
+
+    @Override
+    public String generateUrl() {
+        return "https://www.wanted.co.kr/api/v1/jobs/" + jobId;
     }
 }

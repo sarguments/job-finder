@@ -35,6 +35,11 @@ public class JobService {
         System.out.println("total : " + totalSize);
 
         String next = JsonPath.read(json, "$.links.next");
+        if (next == null) {
+            return -1;
+        }
+
+        // TODO 잡의 경우도 중복 체크 해야함
         JobInfo jobInfo = JobInfo.getInstance();
         jobInfo.updateInfo(totalSize, next);
 
@@ -54,7 +59,6 @@ public class JobService {
                     returnedCompany));
         }
 
-        // TODO getSize
         return jobRepository.findAll().size();
     }
 
@@ -62,6 +66,7 @@ public class JobService {
     public Company saveCompany(Company company) {
         Company returnedCompany = companyRepository.findByCompanyId(company.getCompanyId());
         if (returnedCompany != null) {
+            // TODO 추후 커스텀 에러로 변경, advice 적용?
             throw new IllegalArgumentException();
         }
 

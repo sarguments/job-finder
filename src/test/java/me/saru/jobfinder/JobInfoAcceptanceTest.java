@@ -1,5 +1,6 @@
 package me.saru.jobfinder;
 
+import com.jayway.jsonpath.JsonPath;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -11,7 +12,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import static io.restassured.RestAssured.when;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.Matchers.greaterThan;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
@@ -23,8 +27,23 @@ public class JobInfoAcceptanceTest {
 
     @Test
     public void jobInfoTest() {
+        when()
+                .get("/info")
+                .then()
+                .statusCode(200)
+                .body("total", greaterThan(300));
+    }
+
+    @Test
+    public void jobUpdateTest() {
         ResponseEntity<String> entity = restTemplate.getForEntity("/info", String.class);
         assertThat(entity.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(entity.getBody()).contains("20");
+        String next = JsonPath.read(entity.getBody(), "$.next");
+
+        when()
+                .get("/update")
+                .then()
+                .statusCode(200)
+                .body("next", not(next));
     }
 }

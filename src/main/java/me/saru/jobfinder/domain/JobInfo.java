@@ -1,10 +1,14 @@
 package me.saru.jobfinder.domain;
 
-// TODO singleton?
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+// TODO 불완전한 singleton?
 public class JobInfo {
-    private int total;
-    private String next;
+    @JsonIgnore
     private static JobInfo jobInfoInstance;
+    private String next;
+    // TODO 첫 total과 이후 total이 다른 현상이 있는데 왜 그런것인가?
+    private int total;
 
     private JobInfo() {
     }
