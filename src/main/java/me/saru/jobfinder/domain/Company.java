@@ -37,4 +37,15 @@ public class Company implements UrlGeneratable {
     public String generateUrl() {
         return "https://www.wanted.co.kr/api/v1/companies/" + companyId;
     }
+
+    public boolean isDuplicate() {
+        return false;
+    }
+
+    public static class DuplicateCompany extends Company {
+        @Override
+        public boolean isDuplicate() {
+            return true;
+        }
+    }
 }

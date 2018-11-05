@@ -38,6 +38,7 @@ public class JobInfoController {
         String json = restTemplate.getForObject(uri, String.class);
 
         // TODO size test
+        // TODO 끝일 경우 -1
         jobService.saveJobs(json);
 
         return JobInfo.getInstance();
@@ -62,6 +63,7 @@ public class JobInfoController {
         String json = restTemplate.getForObject(uri, String.class);
 
         // TODO size test
+        // TODO 끝일 경우 -1
         jobService.saveJobs(json);
     }
 

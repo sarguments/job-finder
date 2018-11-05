@@ -44,11 +44,17 @@ public class JobService {
         jobInfo.updateInfo(totalSize, next);
 
         JSONArray jsonArray = JsonPath.read(json, "$.data.jobs.data[*]");
+        saveJobAndCompanyProcess(jsonArray);
+
+        return jobRepository.findAll().size();
+    }
+
+    private void saveJobAndCompanyProcess(JSONArray jsonArray) {
         for (Object aJsonArray : jsonArray) {
             Map<String, Object> jobs = (Map<String, Object>) aJsonArray;
 
             Company company = new Company((Integer) jobs.get("company_id"), (String) jobs.get("company_name"));
-            Company returnedCompany = companyRepository.findByCompanyId(company.getCompanyId());
+            Company returnedCompany = findCompany(company);
             if (returnedCompany == null) {
                 returnedCompany = companyRepository.save(company);
             }
@@ -58,19 +64,20 @@ public class JobService {
                     (String) jobs.get("position"),
                     returnedCompany));
         }
-
-        return jobRepository.findAll().size();
     }
 
     // TODO company?
     public Company saveCompany(Company company) {
-        Company returnedCompany = companyRepository.findByCompanyId(company.getCompanyId());
+        Company returnedCompany = findCompany(company);
         if (returnedCompany != null) {
-            // TODO 추후 커스텀 에러로 변경, advice 적용?
-            throw new IllegalArgumentException();
+            return new Company.DuplicateCompany();
         }
 
         return companyRepository.save(company);
+    }
+
+    private Company findCompany(Company company) {
+        return companyRepository.findByCompanyId(company.getCompanyId());
     }
 
     public Job saveJobs(Job job) {
