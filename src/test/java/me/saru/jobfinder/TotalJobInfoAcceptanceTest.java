@@ -66,7 +66,7 @@ public class TotalJobInfoAcceptanceTest {
                 .then()
                 .statusCode(200)
                 .log().all()
-                .body("[0].id", is(1));
+                .body("[0].company.companyId", is(15));
     }
 
     @Test
@@ -76,7 +76,7 @@ public class TotalJobInfoAcceptanceTest {
                 .then()
                 .statusCode(200)
                 .log().all()
-                .body("[0].company.id", is(15));
+                .body("[0].company.companyId", is(15));
     }
 
     @Test

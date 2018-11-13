@@ -29,7 +29,7 @@ public class JobServiceTest {
 
     @Test
     public void findAllJobByCompany() {
-        List<Job> jobs = jobService.findAllJobByCompanyId(2);
+        List<Job> jobs = jobService.findAllJobByCompanyId(15);
         assertThat(jobs.size()).isEqualTo(2);
     }
 
