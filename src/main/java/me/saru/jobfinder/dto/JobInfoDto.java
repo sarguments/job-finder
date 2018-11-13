@@ -13,6 +13,9 @@ public class JobInfoDto {
     private String jd;
     private String shortLink;
 
+    public JobInfoDto() {
+    }
+
     public static JobInfoDto of(String json) {
         String category = JsonPath.read(json, "$.category");
         Double replyRate = JsonPath.read(json, "$.reply_rate");

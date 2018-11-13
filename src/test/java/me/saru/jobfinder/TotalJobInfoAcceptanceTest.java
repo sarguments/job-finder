@@ -14,8 +14,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import static io.restassured.RestAssured.when;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.CoreMatchers.startsWith;
+import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.Matchers.greaterThan;
 
 @RunWith(SpringRunner.class)
@@ -27,7 +26,7 @@ public class TotalJobInfoAcceptanceTest {
     private TestRestTemplate restTemplate;
 
     @Test
-    public void jobListTest() {
+    public void jobListInitTest() {
         when()
                 .get("/info")
                 .then()
@@ -43,7 +42,7 @@ public class TotalJobInfoAcceptanceTest {
         String next = JsonPath.read(entity.getBody(), "$.next");
 
         when()
-                .get("/update")
+                .get("/update?number=1")
                 .then()
                 .statusCode(200)
                 .log().all()
@@ -58,5 +57,35 @@ public class TotalJobInfoAcceptanceTest {
                 .statusCode(200)
                 .log().all()
                 .body("jd", startsWith("마이리얼트립"));
+    }
+
+    @Test
+    public void jobShowListTest() {
+        when()
+                .get("/show")
+                .then()
+                .statusCode(200)
+                .log().all()
+                .body("[0].id", is(1));
+    }
+
+    @Test
+    public void jobInfoByCompanyTest() {
+        when()
+                .get("/companies/15/jobs")
+                .then()
+                .statusCode(200)
+                .log().all()
+                .body("[0].company.id", is(15));
+    }
+
+    @Test
+    public void companyInfoTest() {
+        when()
+                .get("/companies/15")
+                .then()
+                .statusCode(200)
+                .log().all()
+                .body("name", is("마이리얼트립"));
     }
 }

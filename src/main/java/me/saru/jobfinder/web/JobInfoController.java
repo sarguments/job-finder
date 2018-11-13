@@ -1,6 +1,10 @@
 package me.saru.jobfinder.web;
 
+import me.saru.jobfinder.domain.Company;
+import me.saru.jobfinder.domain.Job;
 import me.saru.jobfinder.domain.TotalJobInfo;
+import me.saru.jobfinder.dto.CompanyDto;
+import me.saru.jobfinder.dto.JobDto;
 import me.saru.jobfinder.dto.JobInfoDto;
 import me.saru.jobfinder.service.JobService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
+
+import java.util.List;
 
 @RestController
 public class JobInfoController {
@@ -46,15 +52,6 @@ public class JobInfoController {
         return TotalJobInfo.getInstance();
     }
 
-    // TOOD 먼저 호출할 경우 예외처리
-    // TODO get?
-    @GetMapping("/update")
-    public TotalJobInfo jobUpdate() {
-        updateProcess();
-
-        return TotalJobInfo.getInstance();
-    }
-
     private void updateProcess() {
         String next = TotalJobInfo.getInstance().getNext();
         UriComponents uriComponents = UriComponentsBuilder.newInstance().scheme("https").host("www.wanted.co.kr")
@@ -82,6 +79,28 @@ public class JobInfoController {
     public JobInfoDto jobInfo(@PathVariable int jobId) {
         String uri = "https://www.wanted.co.kr/api/v1/jobs/" + jobId;
         String json = restTemplate.getForObject(uri, String.class);
-        return jobService.extractJobInfo(json);
+
+        // TODO dto에서 바로 이렇게 해도 되나?
+        return JobInfoDto.of(json);
+    }
+
+    @GetMapping("/show")
+    public List<JobDto> jobInfos() {
+        return jobService.findAllJob();
+    }
+
+    // TODO 컨트롤러 따로 나누자
+    @GetMapping("/companies/{companyId}/jobs")
+    public List<JobDto> jobListByCompany(@PathVariable int companyId) {
+        List<Job> jobs = jobService.findAllJobByCompanyId(companyId);
+        return jobService.jobsToDtos(jobs);
+    }
+
+    @GetMapping("/companies/{companyId}")
+    public CompanyDto jobInfoByCompany(@PathVariable int companyId) {
+        Company company = jobService.findByCompanyId(companyId);
+
+        // TODO 서비스에서 호출해서 정보 받아온다음 dto에 넣어서 리턴
+        return CompanyDto.of(company);
     }
 }

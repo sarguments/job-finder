@@ -56,6 +56,7 @@ public class Company implements UrlGeneratable {
         return "https://www.wanted.co.kr/api/v1/companies/" + companyId;
     }
 
+    @JsonIgnore
     public boolean isDuplicate() {
         return false;
     }

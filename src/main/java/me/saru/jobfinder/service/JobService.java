@@ -4,7 +4,7 @@ import com.jayway.jsonpath.JsonPath;
 import me.saru.jobfinder.domain.Company;
 import me.saru.jobfinder.domain.Job;
 import me.saru.jobfinder.domain.TotalJobInfo;
-import me.saru.jobfinder.dto.JobInfoDto;
+import me.saru.jobfinder.dto.JobDto;
 import me.saru.jobfinder.repository.CompanyRepository;
 import me.saru.jobfinder.repository.JobRepository;
 import net.minidev.json.JSONArray;
@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -96,7 +97,21 @@ public class JobService {
         return jobRepository.findByJobId(jobId);
     }
 
-    public JobInfoDto extractJobInfo(String json) {
-        return JobInfoDto.of(json);
+    public List<JobDto> findAllJob() {
+        List<Job> jobs = jobRepository.findAll();
+        return jobsToDtos(jobs);
+    }
+
+    public List<JobDto> jobsToDtos(List<Job> jobs) {
+        List<JobDto> jobDtos = new ArrayList<>();
+        for (Job job : jobs) {
+            jobDtos.add(job.toDto());
+        }
+
+        return jobDtos;
+    }
+
+    public Company findByCompanyId(int companyId) {
+        return companyRepository.findByCompanyId(companyId);
     }
 }
