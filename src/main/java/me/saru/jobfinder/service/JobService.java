@@ -4,6 +4,7 @@ import com.jayway.jsonpath.JsonPath;
 import me.saru.jobfinder.domain.Company;
 import me.saru.jobfinder.domain.Job;
 import me.saru.jobfinder.domain.TotalJobInfo;
+import me.saru.jobfinder.dto.CompanyDto;
 import me.saru.jobfinder.dto.JobDto;
 import me.saru.jobfinder.repository.CompanyRepository;
 import me.saru.jobfinder.repository.JobRepository;
@@ -12,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +37,6 @@ public class JobService {
 
     public int saveJobAndCompany(String json) {
         int totalSize = JsonPath.read(json, "$.data.jobs.total");
-        System.out.println("total : " + totalSize);
 
         String next = JsonPath.read(json, "$.links.next");
         if (next == null) {
@@ -113,5 +114,20 @@ public class JobService {
 
     public Company findByCompanyId(int companyId) {
         return companyRepository.findByCompanyId(companyId);
+    }
+
+    public CompanyDto fetchCompanyInfo(Company company) {
+        // TODO 이 안에서 restTemplate 호출하는건 고민해 보자
+        RestTemplate restTemplate = new RestTemplate();
+
+        // TODO 인터페이스 수정
+        String wantedCompanyUrl = company.generateUrl();
+        String wantedJson = restTemplate.getForObject(wantedCompanyUrl, String.class);
+
+        // TODO 추후에 url 생성 관련하여 객체화 시킬 수 있을 듯
+        String theVcUrl = company.generateTheVcUrl();
+        String theVcJson = restTemplate.getForObject(theVcUrl, String.class);
+
+        return CompanyDto.of(company).update(wantedJson, theVcJson);
     }
 }

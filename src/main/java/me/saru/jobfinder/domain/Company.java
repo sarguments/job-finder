@@ -7,6 +7,7 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+// TODO founded_year 추가 안되는 문제
 @Entity
 public class Company implements UrlGeneratable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,8 +17,11 @@ public class Company implements UrlGeneratable {
     private int companyId;
     private String name;
 
-    //founded_year
-    //total_location
+    private String totalLocation;
+    private String industryName;
+
+    @Lob
+    private String info;
 
     @OneToMany(mappedBy = "company")
     @JsonIgnore
@@ -64,6 +68,22 @@ public class Company implements UrlGeneratable {
     // TODO get?
     public List<Job> getJobs() {
         return jobs;
+    }
+
+    public String getTotalLocation() {
+        return totalLocation;
+    }
+
+    public String getIndustryName() {
+        return industryName;
+    }
+
+    public String getInfo() {
+        return info;
+    }
+
+    public String generateTheVcUrl() {
+        return "https://thevc.kr/search?word=" + name;
     }
 
     public static class DuplicateCompany extends Company {

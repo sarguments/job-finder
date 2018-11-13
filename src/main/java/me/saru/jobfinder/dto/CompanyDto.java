@@ -1,25 +1,20 @@
 package me.saru.jobfinder.dto;
 
+import com.jayway.jsonpath.JsonPath;
 import me.saru.jobfinder.domain.Company;
 
 // TODO url 생성을 맵으로?
 public class CompanyDto {
-
     private String theVcUrl;
-    private String wantedCompanyUrl;
+    private String info;
+    private String industryName;
+    private String totalLocation;
     private String name;
     private int companyId;
 
     private CompanyDto(Company company) {
         this.companyId = company.getCompanyId();
         this.name = company.getName();
-
-        this.wantedCompanyUrl = company.generateUrl();
-        //name, industry_name, location, info
-
-        // TODO 추후에 url 생성 관련하여 객체화 시킬 수 있을 듯
-        this.theVcUrl = "https://thevc.kr/search?word=" + name;
-        //c[0].name_url
     }
 
     // TODO 과도한 of?
@@ -27,12 +22,13 @@ public class CompanyDto {
         return new CompanyDto(company);
     }
 
-    public String getTheVcUrl() {
-        return theVcUrl;
-    }
+    public CompanyDto update(String wantedJson, String theVcJson) {
+        this.totalLocation = JsonPath.read(wantedJson, "$.total_location");
+        this.industryName = JsonPath.read(wantedJson, "$.industry_name");
+        this.info = JsonPath.read(wantedJson, "$.info");
+        this.theVcUrl = "https://thevc.kr/" + JsonPath.read(theVcJson, "$.c[0].name_url");
 
-    public String getWantedCompanyUrl() {
-        return wantedCompanyUrl;
+        return this;
     }
 
     public String getName() {
@@ -41,5 +37,21 @@ public class CompanyDto {
 
     public int getCompanyId() {
         return companyId;
+    }
+
+    public String getTheVcUrl() {
+        return theVcUrl;
+    }
+
+    public String getInfo() {
+        return info;
+    }
+
+    public String getIndustryName() {
+        return industryName;
+    }
+
+    public String getTotalLocation() {
+        return totalLocation;
     }
 }

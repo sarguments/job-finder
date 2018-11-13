@@ -99,8 +99,6 @@ public class JobInfoController {
     @GetMapping("/companies/{companyId}")
     public CompanyDto jobInfoByCompany(@PathVariable int companyId) {
         Company company = jobService.findByCompanyId(companyId);
-
-        // TODO 서비스에서 호출해서 정보 받아온다음 dto에 넣어서 리턴
-        return CompanyDto.of(company);
+        return jobService.fetchCompanyInfo(company);
     }
 }
