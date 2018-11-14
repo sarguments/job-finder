@@ -1,6 +1,5 @@
 package me.saru.jobfinder.domain;
 
-import me.saru.jobfinder.dto.JobDto;
 import me.saru.jobfinder.support.UrlGeneratable;
 
 import javax.persistence.*;
@@ -60,9 +59,5 @@ public class Job implements UrlGeneratable {
         if (!company.getJobs().contains(this)) {
             company.getJobs().add(this);
         }
-    }
-
-    public JobDto toDto() {
-        return new JobDto(this);
     }
 }

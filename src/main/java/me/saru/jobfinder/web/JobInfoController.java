@@ -6,44 +6,30 @@ import me.saru.jobfinder.domain.TotalJobInfo;
 import me.saru.jobfinder.dto.CompanyDto;
 import me.saru.jobfinder.dto.JobDto;
 import me.saru.jobfinder.dto.JobInfoDto;
+import me.saru.jobfinder.service.ApiScrapper;
 import me.saru.jobfinder.service.JobService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponents;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
 
 @RestController
 public class JobInfoController {
     private JobService jobService;
-    // TODO new?
-    private RestTemplate restTemplate = new RestTemplate();
+    private ApiScrapper apiScrapper;
 
     @Autowired
-    public JobInfoController(JobService jobService) {
+    public JobInfoController(JobService jobService, ApiScrapper apiScrapper) {
         this.jobService = jobService;
+        this.apiScrapper = apiScrapper;
     }
 
     @GetMapping("/info")
     public TotalJobInfo jobSave() {
-        UriComponents uriComponents = UriComponentsBuilder.newInstance().scheme("https").host("www.wanted.co.kr")
-                .path("/api/v3/search")
-                .queryParam("locale", "ko-kr")
-                .queryParam("country", "KR")
-                .queryParam("years", "-1")
-                .queryParam("limit", "20")
-                .queryParam("offset", "0")
-                .queryParam("job_sort", "-confirm_time")
-                .queryParam("tag_type_id", "{tag-type-id}")
-                .buildAndExpand("872").encode();
-
-        String uri = uriComponents.toUriString();
-        String json = restTemplate.getForObject(uri, String.class);
+        String json = apiScrapper.fetchWantedJson();
 
         // TODO size test
         // TODO 끝일 경우 -1
@@ -54,12 +40,7 @@ public class JobInfoController {
 
     private void updateProcess() {
         String next = TotalJobInfo.getInstance().getNext();
-        UriComponents uriComponents = UriComponentsBuilder.newInstance().scheme("https").host("www.wanted.co.kr")
-                .path(next)
-                .build();
-
-        String uri = uriComponents.toUriString();
-        String json = restTemplate.getForObject(uri, String.class);
+        String json = apiScrapper.fetchNextJob(next);
 
         // TODO size test
         // TODO 끝일 경우 -1
@@ -77,8 +58,7 @@ public class JobInfoController {
 
     @GetMapping("/jobs/{jobId}")
     public JobInfoDto jobInfo(@PathVariable int jobId) {
-        String uri = "https://www.wanted.co.kr/api/v1/jobs/" + jobId;
-        String json = restTemplate.getForObject(uri, String.class);
+        String json = apiScrapper.fetchJobs(jobId);
 
         // TODO dto에서 바로 이렇게 해도 되나?
         return JobInfoDto.of(json);

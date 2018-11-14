@@ -17,12 +17,6 @@ public class Company implements UrlGeneratable {
     private int companyId;
     private String name;
 
-    private String totalLocation;
-    private String industryName;
-
-    @Lob
-    private String info;
-
     @OneToMany(mappedBy = "company")
     @JsonIgnore
     private List<Job> jobs = new ArrayList<>();
@@ -68,18 +62,6 @@ public class Company implements UrlGeneratable {
     // TODO get?
     public List<Job> getJobs() {
         return jobs;
-    }
-
-    public String getTotalLocation() {
-        return totalLocation;
-    }
-
-    public String getIndustryName() {
-        return industryName;
-    }
-
-    public String getInfo() {
-        return info;
     }
 
     public String generateTheVcUrl() {

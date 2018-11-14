@@ -13,7 +13,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,15 +21,14 @@ import java.util.Map;
 @Service
 public class JobService {
     private static final Logger log = LoggerFactory.getLogger(JobService.class);
+    private ApiScrapper apiScrapper;
 
     private JobRepository jobRepository;
     private CompanyRepository companyRepository;
 
-    public JobService() {
-    }
-
     @Autowired
-    public JobService(JobRepository jobRepository, CompanyRepository companyRepository) {
+    public JobService(ApiScrapper apiScrapper, JobRepository jobRepository, CompanyRepository companyRepository) {
+        this.apiScrapper = apiScrapper;
         this.jobRepository = jobRepository;
         this.companyRepository = companyRepository;
     }
@@ -106,7 +104,7 @@ public class JobService {
     public List<JobDto> jobsToDtos(List<Job> jobs) {
         List<JobDto> jobDtos = new ArrayList<>();
         for (Job job : jobs) {
-            jobDtos.add(job.toDto());
+            jobDtos.add(new JobDto(job));
         }
 
         return jobDtos;
@@ -117,16 +115,13 @@ public class JobService {
     }
 
     public CompanyDto fetchCompanyInfo(Company company) {
-        // TODO 이 안에서 restTemplate 호출하는건 고민해 보자
-        RestTemplate restTemplate = new RestTemplate();
-
         // TODO 인터페이스 수정
         String wantedCompanyUrl = company.generateUrl();
-        String wantedJson = restTemplate.getForObject(wantedCompanyUrl, String.class);
+        String wantedJson = apiScrapper.get(wantedCompanyUrl);
 
         // TODO 추후에 url 생성 관련하여 객체화 시킬 수 있을 듯
         String theVcUrl = company.generateTheVcUrl();
-        String theVcJson = restTemplate.getForObject(theVcUrl, String.class);
+        String theVcJson = apiScrapper.get(theVcUrl);
 
         return CompanyDto.of(company).update(wantedJson, theVcJson);
     }
