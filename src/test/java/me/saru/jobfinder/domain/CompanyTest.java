@@ -8,6 +8,7 @@ public class CompanyTest {
     @Test
     public void urlGenerateTest() {
         Company company = new Company(2, "company");
-        assertThat(company.generateUrl()).isEqualTo("https://www.wanted.co.kr/api/v1/companies/2");
+        assertThat(company.generateWantedUrl()).isEqualTo("https://www.wanted.co.kr/api/v1/companies/2");
+        assertThat(company.generateTheVcUrl()).isEqualTo("https://thevc.kr/search?word=company");
     }
 }

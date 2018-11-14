@@ -1,13 +1,11 @@
 package me.saru.jobfinder.web;
 
-import me.saru.jobfinder.domain.Company;
-import me.saru.jobfinder.domain.Job;
 import me.saru.jobfinder.domain.TotalJobInfo;
-import me.saru.jobfinder.dto.CompanyDto;
 import me.saru.jobfinder.dto.JobDto;
 import me.saru.jobfinder.dto.JobInfoDto;
 import me.saru.jobfinder.service.ApiScrapper;
 import me.saru.jobfinder.service.JobService;
+import me.saru.jobfinder.service.SaveService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,22 +16,23 @@ import java.util.List;
 
 @RestController
 public class JobInfoController {
-    private JobService jobService;
+    private SaveService saveService;
     private ApiScrapper apiScrapper;
+    private JobService jobService;
 
     @Autowired
-    public JobInfoController(JobService jobService, ApiScrapper apiScrapper) {
-        this.jobService = jobService;
+    public JobInfoController(SaveService saveService, ApiScrapper apiScrapper, JobService jobService) {
+        this.saveService = saveService;
         this.apiScrapper = apiScrapper;
+        this.jobService = jobService;
     }
 
     @GetMapping("/info")
     public TotalJobInfo jobSave() {
         String json = apiScrapper.fetchWantedJson();
 
-        // TODO size test
-        // TODO 끝일 경우 -1
-        jobService.saveJobAndCompany(json);
+        // TODO false
+        saveService.saveJobAndCompany(json);
 
         return TotalJobInfo.getInstance();
     }
@@ -42,9 +41,8 @@ public class JobInfoController {
         String next = TotalJobInfo.getInstance().getNext();
         String json = apiScrapper.fetchNextJob(next);
 
-        // TODO size test
-        // TODO 끝일 경우 -1
-        jobService.saveJobAndCompany(json);
+        // TODO false
+        saveService.saveJobAndCompany(json);
     }
 
     @GetMapping(value = "/update", params = "number")
@@ -67,18 +65,5 @@ public class JobInfoController {
     @GetMapping("/show")
     public List<JobDto> jobInfos() {
         return jobService.findAllJob();
-    }
-
-    // TODO 컨트롤러 따로 나누자
-    @GetMapping("/companies/{companyId}/jobs")
-    public List<JobDto> jobListByCompany(@PathVariable int companyId) {
-        List<Job> jobs = jobService.findAllJobByCompanyId(companyId);
-        return jobService.jobsToDtos(jobs);
-    }
-
-    @GetMapping("/companies/{companyId}")
-    public CompanyDto jobInfoByCompany(@PathVariable int companyId) {
-        Company company = jobService.findByCompanyId(companyId);
-        return jobService.fetchCompanyInfo(company);
     }
 }

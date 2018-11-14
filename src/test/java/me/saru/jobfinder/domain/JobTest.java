@@ -18,6 +18,6 @@ public class JobTest {
         Job job = new Job("img", 1, "position");
         Company company = new Company(1, "companyName");
         company.addJob(job);
-        assertThat(job.generateUrl()).isEqualTo("https://www.wanted.co.kr/api/v1/jobs/1");
+        assertThat(job.generateWantedUrl()).isEqualTo("https://www.wanted.co.kr/api/v1/jobs/1");
     }
 }

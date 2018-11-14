@@ -1,5 +1,7 @@
 package me.saru.jobfinder.service;
 
+import me.saru.jobfinder.domain.Company;
+import me.saru.jobfinder.dto.CompanyDto;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponents;
@@ -45,5 +47,17 @@ public class ApiScrapper {
     public String fetchJobs(int jobId) {
         String uri = "https://www.wanted.co.kr/api/v1/jobs/" + jobId;
         return restTemplate.getForObject(uri, String.class);
+    }
+
+    public CompanyDto fetchCompanyInfo(Company company) {
+        // TODO 인터페이스 수정
+        String wantedCompanyUrl = company.generateWantedUrl();
+        String wantedJson = get(wantedCompanyUrl);
+
+        // TODO 추후에 url 생성 관련하여 객체화 시킬 수 있을 듯
+        String theVcUrl = company.generateTheVcUrl();
+        String theVcJson = get(theVcUrl);
+
+        return CompanyDto.of(company).update(wantedJson, theVcJson);
     }
 }

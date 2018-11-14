@@ -1,7 +1,6 @@
 package me.saru.jobfinder.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import me.saru.jobfinder.support.UrlGeneratable;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -9,7 +8,7 @@ import java.util.List;
 
 // TODO founded_year 추가 안되는 문제
 @Entity
-public class Company implements UrlGeneratable {
+public class Company {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private Long id;
@@ -49,11 +48,6 @@ public class Company implements UrlGeneratable {
         }
     }
 
-    @Override
-    public String generateUrl() {
-        return "https://www.wanted.co.kr/api/v1/companies/" + companyId;
-    }
-
     @JsonIgnore
     public boolean isDuplicate() {
         return false;
@@ -64,11 +58,16 @@ public class Company implements UrlGeneratable {
         return jobs;
     }
 
+    public String generateWantedUrl() {
+        return "https://www.wanted.co.kr/api/v1/companies/" + companyId;
+    }
+
     public String generateTheVcUrl() {
         return "https://thevc.kr/search?word=" + name;
     }
 
     public static class DuplicateCompany extends Company {
+
         @Override
         public boolean isDuplicate() {
             return true;
