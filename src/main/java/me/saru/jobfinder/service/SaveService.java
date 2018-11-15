@@ -15,13 +15,11 @@ import java.util.Map;
 @Service
 public class SaveService {
     private static final Logger log = LoggerFactory.getLogger(SaveService.class);
-    private ApiScrapper apiScrapper;
     private CompanyService companyService;
     private JobService jobService;
 
     @Autowired
-    public SaveService(ApiScrapper apiScrapper, CompanyService companyService, JobService jobService) {
-        this.apiScrapper = apiScrapper;
+    public SaveService(CompanyService companyService, JobService jobService) {
         this.companyService = companyService;
         this.jobService = jobService;
     }

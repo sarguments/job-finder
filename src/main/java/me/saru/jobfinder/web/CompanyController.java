@@ -4,7 +4,6 @@ import me.saru.jobfinder.domain.Company;
 import me.saru.jobfinder.domain.Job;
 import me.saru.jobfinder.dto.CompanyDto;
 import me.saru.jobfinder.dto.JobDto;
-import me.saru.jobfinder.service.ApiScrapper;
 import me.saru.jobfinder.service.CompanyService;
 import me.saru.jobfinder.service.JobService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,12 +16,10 @@ import java.util.List;
 @RestController
 public class CompanyController {
     private JobService jobService;
-    private ApiScrapper apiScrapper;
     private CompanyService companyService;
 
     @Autowired
-    public CompanyController(ApiScrapper apiScrapper, CompanyService companyService, JobService jobService) {
-        this.apiScrapper = apiScrapper;
+    public CompanyController(CompanyService companyService, JobService jobService) {
         this.companyService = companyService;
         this.jobService = jobService;
     }
@@ -36,6 +33,6 @@ public class CompanyController {
     @GetMapping("/companies/{companyId}")
     public CompanyDto jobInfoByCompany(@PathVariable int companyId) {
         Company company = companyService.findByCompanyId(companyId);
-        return apiScrapper.fetchCompanyInfo(company);
+        return companyService.fetchCompanyInfo(company);
     }
 }
