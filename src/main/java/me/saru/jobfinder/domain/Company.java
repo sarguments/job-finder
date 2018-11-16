@@ -66,6 +66,10 @@ public class Company {
         return "https://thevc.kr/search?word=" + name;
     }
 
+    public String generateRocketUrl() {
+        return "https://www.rocketpunch.com/suggest?q=" + name;
+    }
+
     public static class DuplicateCompany extends Company {
 
         @Override

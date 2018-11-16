@@ -12,6 +12,7 @@ public class JobInfoDto {
     private int annualTo;
     private String jd;
     private String shortLink;
+    private int companyId;
 
     public JobInfoDto() {
     }
@@ -25,6 +26,7 @@ public class JobInfoDto {
         int annualTo = JsonPath.read(json, "$.annual_to");
         String jd = JsonPath.read(json, "$.jd");
         String shortLink = JsonPath.read(json, "$.short_link");
+        int companyId = JsonPath.read(json, "$.company_id");
 
         return new JobInfoDto().setCategory(category)
                 .setReplyRate(replyRate)
@@ -33,7 +35,17 @@ public class JobInfoDto {
                 .setAnnualFrom(annualFrom)
                 .setAnnualTo(annualTo)
                 .setJd(jd)
-                .setShortLink(shortLink);
+                .setShortLink(shortLink)
+                .setCompanyId(companyId);
+    }
+
+    public int getCompanyId() {
+        return companyId;
+    }
+
+    public JobInfoDto setCompanyId(int companyId) {
+        this.companyId = companyId;
+        return this;
     }
 
     public String getCategory() {

@@ -84,7 +84,26 @@ public class TotalJobInfoAcceptanceTest {
                 .log().all()
                 .body("totalLocation", is("서울특별시 강남구 강남대로 364(역삼동), 미왕빌딩 15층"))
                 .body("industryName", is("여행, 호텔, 항공"))
-                .body("info", startsWith("마이리얼트립은 한국 최고의 자유여행 플랫폼 회사로서"))
+                .body("info", startsWith("마이리얼트립은 한국 최고의 자유여행 플랫폼 회사로서"));
+    }
+
+    @Test
+    public void companyInfoTheVcTest() {
+        when()
+                .get("/companies/15")
+                .then()
+                .statusCode(200)
+                .log().all()
                 .body("theVcUrl", is("https://thevc.kr/MyRealTrip"));
+    }
+
+    @Test
+    public void companyInfoRocketTest() {
+        when()
+                .get("/companies/15")
+                .then()
+                .statusCode(200)
+                .log().all()
+                .body("rocketUrl", is("https://www.rocketpunch.com/companies/myrealtrip"));
     }
 }

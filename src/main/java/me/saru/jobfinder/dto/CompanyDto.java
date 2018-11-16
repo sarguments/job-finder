@@ -11,6 +11,7 @@ public class CompanyDto {
     private String totalLocation;
     private String name;
     private int companyId;
+    private String rocketUrl;
 
     private CompanyDto(Company company) {
         this.companyId = company.getCompanyId();
@@ -22,11 +23,18 @@ public class CompanyDto {
         return new CompanyDto(company);
     }
 
-    public CompanyDto update(String wantedJson, String theVcJson) {
+    public CompanyDto update(String wantedJson, String theVcUrl, String rocketUrl) {
         this.totalLocation = JsonPath.read(wantedJson, "$.total_location");
         this.industryName = JsonPath.read(wantedJson, "$.industry_name");
         this.info = JsonPath.read(wantedJson, "$.info");
-        this.theVcUrl = "https://thevc.kr/" + JsonPath.read(theVcJson, "$.c[0].name_url");
+
+        if (!checkNotFound(theVcUrl)) {
+            this.theVcUrl = theVcUrl;
+        }
+
+        if (!checkNotFound(rocketUrl)) {
+            this.rocketUrl = rocketUrl;
+        }
 
         return this;
     }
@@ -53,5 +61,14 @@ public class CompanyDto {
 
     public String getTotalLocation() {
         return totalLocation;
+    }
+
+    public String getRocketUrl() {
+        return rocketUrl;
+    }
+
+    private boolean checkNotFound(String param) {
+        return param.equals("NOT_FOUND");
+
     }
 }
