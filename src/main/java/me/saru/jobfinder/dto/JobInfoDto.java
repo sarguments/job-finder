@@ -1,6 +1,5 @@
 package me.saru.jobfinder.dto;
 
-// TODO Dto가 아니라 JobInfo 객체에서 파싱을 하자
 public class JobInfoDto {
     private String category;
     private Double replyRate;

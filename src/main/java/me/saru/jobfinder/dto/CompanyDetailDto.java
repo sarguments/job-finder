@@ -1,14 +1,14 @@
 package me.saru.jobfinder.dto;
 
-public class CompanyInfoDto {
+public class CompanyDetailDto {
     private String totalLocation;
     private String industryName;
     private String info;
 
-    public CompanyInfoDto() {
+    public CompanyDetailDto() {
     }
 
-    public CompanyInfoDto(String totalLocation, String industryName, String info) {
+    public CompanyDetailDto(String totalLocation, String industryName, String info) {
         this.totalLocation = totalLocation;
         this.industryName = industryName;
         this.info = info;

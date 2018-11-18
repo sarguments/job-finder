@@ -22,10 +22,10 @@ public class CompanyDto {
         return new CompanyDto(company);
     }
 
-    public CompanyDto update(CompanyInfoDto companyInfoDto, String theVcUrl, String rocketUrl) {
-        this.totalLocation = companyInfoDto.getTotalLocation();
-        this.industryName = companyInfoDto.getIndustryName();
-        this.info = companyInfoDto.getInfo();
+    public CompanyDto update(CompanyDetailDto companyDetailDto, String theVcUrl, String rocketUrl) {
+        this.totalLocation = companyDetailDto.getTotalLocation();
+        this.industryName = companyDetailDto.getIndustryName();
+        this.info = companyDetailDto.getInfo();
 
         if (!checkNotFound(theVcUrl)) {
             this.theVcUrl = theVcUrl;

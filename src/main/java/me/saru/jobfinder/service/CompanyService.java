@@ -2,8 +2,8 @@ package me.saru.jobfinder.service;
 
 import com.jayway.jsonpath.JsonPath;
 import me.saru.jobfinder.domain.Company;
+import me.saru.jobfinder.dto.CompanyDetailDto;
 import me.saru.jobfinder.dto.CompanyDto;
-import me.saru.jobfinder.dto.CompanyInfoDto;
 import me.saru.jobfinder.repository.CompanyRepository;
 import net.minidev.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,12 +60,12 @@ public class CompanyService {
                         extractRocketUrl(rocketJson));
     }
 
-    private CompanyInfoDto extractWantedJson(String wantedJson) {
+    private CompanyDetailDto extractWantedJson(String wantedJson) {
         String totalLocation = JsonPath.read(wantedJson, "$.total_location");
         String industryName = JsonPath.read(wantedJson, "$.industry_name");
         String info = JsonPath.read(wantedJson, "$.info");
 
-        return new CompanyInfoDto(totalLocation, industryName, info);
+        return new CompanyDetailDto(totalLocation, industryName, info);
     }
 
     private String extractTheVcUrl(String theVcJson) {
