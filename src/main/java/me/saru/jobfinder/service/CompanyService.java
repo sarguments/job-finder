@@ -3,6 +3,7 @@ package me.saru.jobfinder.service;
 import com.jayway.jsonpath.JsonPath;
 import me.saru.jobfinder.domain.Company;
 import me.saru.jobfinder.dto.CompanyDto;
+import me.saru.jobfinder.dto.CompanyInfoDto;
 import me.saru.jobfinder.repository.CompanyRepository;
 import net.minidev.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,8 +54,18 @@ public class CompanyService {
         String rocketUrl = company.generateRocketUrl();
         String rocketJson = apiScrapper.get(rocketUrl);
 
-        // TODO 분리가 애매
-        return CompanyDto.of(company).update(wantedJson, extractTheVcUrl(theVcJson), extractRocketUrl(rocketJson));
+        return CompanyDto.of(company)
+                .update(extractWantedJson(wantedJson),
+                        extractTheVcUrl(theVcJson),
+                        extractRocketUrl(rocketJson));
+    }
+
+    private CompanyInfoDto extractWantedJson(String wantedJson) {
+        String totalLocation = JsonPath.read(wantedJson, "$.total_location");
+        String industryName = JsonPath.read(wantedJson, "$.industry_name");
+        String info = JsonPath.read(wantedJson, "$.info");
+
+        return new CompanyInfoDto(totalLocation, industryName, info);
     }
 
     private String extractTheVcUrl(String theVcJson) {

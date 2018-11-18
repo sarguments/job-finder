@@ -1,6 +1,5 @@
 package me.saru.jobfinder.dto;
 
-import com.jayway.jsonpath.JsonPath;
 import me.saru.jobfinder.domain.Company;
 
 // TODO url 생성을 맵으로?
@@ -23,10 +22,10 @@ public class CompanyDto {
         return new CompanyDto(company);
     }
 
-    public CompanyDto update(String wantedJson, String theVcUrl, String rocketUrl) {
-        this.totalLocation = JsonPath.read(wantedJson, "$.total_location");
-        this.industryName = JsonPath.read(wantedJson, "$.industry_name");
-        this.info = JsonPath.read(wantedJson, "$.info");
+    public CompanyDto update(CompanyInfoDto companyInfoDto, String theVcUrl, String rocketUrl) {
+        this.totalLocation = companyInfoDto.getTotalLocation();
+        this.industryName = companyInfoDto.getIndustryName();
+        this.info = companyInfoDto.getInfo();
 
         if (!checkNotFound(theVcUrl)) {
             this.theVcUrl = theVcUrl;

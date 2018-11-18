@@ -54,10 +54,7 @@ public class JobInfoController {
 
     @GetMapping("/jobs/{jobId}")
     public JobInfoDto jobInfo(@PathVariable int jobId) {
-        String json = jobService.fetchJobs(jobId);
-
-        // TODO dto에서 바로 이렇게 해도 되나?
-        return JobInfoDto.of(json);
+        return jobService.fetchJobs(jobId);
     }
 
     @GetMapping("/show")

@@ -1,8 +1,10 @@
 package me.saru.jobfinder.service;
 
+import com.jayway.jsonpath.JsonPath;
 import me.saru.jobfinder.domain.Company;
 import me.saru.jobfinder.domain.Job;
 import me.saru.jobfinder.dto.JobDto;
+import me.saru.jobfinder.dto.JobInfoDto;
 import me.saru.jobfinder.repository.CompanyRepository;
 import me.saru.jobfinder.repository.JobRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,8 +81,30 @@ public class JobService {
         return apiScrapper.get(uri);
     }
 
-    public String fetchJobs(int jobId) {
+    public JobInfoDto fetchJobs(int jobId) {
         String uri = "https://www.wanted.co.kr/api/v1/jobs/" + jobId;
-        return apiScrapper.get(uri);
+        String json = apiScrapper.get(uri);
+
+        String category = JsonPath.read(json, "$.category");
+        Double replyRate = JsonPath.read(json, "$.reply_rate");
+        String status = JsonPath.read(json, "$.status");
+        String industryName = JsonPath.read(json, "$.industry_name");
+        int annualFrom = JsonPath.read(json, "$.annual_from");
+        int annualTo = JsonPath.read(json, "$.annual_to");
+        String jd = JsonPath.read(json, "$.jd");
+        String shortLink = JsonPath.read(json, "$.short_link");
+        int companyId = JsonPath.read(json, "$.company_id");
+
+        return new JobInfoDto.Builder()
+                .category(category)
+                .replyRate(replyRate)
+                .status(status)
+                .industryName(industryName)
+                .annualFrom(annualFrom)
+                .annualTo(annualTo)
+                .jd(jd)
+                .shortLink(shortLink)
+                .companyId(companyId)
+                .build();
     }
 }
